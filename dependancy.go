@@ -33,17 +33,33 @@ func buildPath(services map[string]string, checked []string, checkAgainst string
 	return checked
 }
 
-/*func findDependancyLoop(services map[string]string) bool {
-
-	return false
-}*/
-
-func main() {
-	dependMap := map[string]string{
-		"aa": "c",
-		"b":  "",
-		"c":  "b",
+func findDependancyLoop(services map[string][]string) bool {
+	//resultMap := make(map[string]bool)
+	for compareService := range services {
+		fmt.Println(compareService)
+		subDependancy := services[compareService]
+		fmt.Println("sub", subDependancy)
+		for compare := range subDependancy {
+			fmt.Println(subDependancy[compare])
+		}
+		/*for dependancy := range services[compareService] {
+			fmt.Println("service", services[compareService])
+			fmt.Println("depend", dependancy)
+		}*/
 	}
 
-	fmt.Println("result", buildPath(dependMap, make([]string, 0), "aa"))
+	return false
+}
+
+func main() {
+	dependMap := map[string][]string{
+		"a": {},
+		"b": {"a"},
+		"c": {"b", "a"},
+	}
+
+	result := findDependancyLoop(dependMap)
+	fmt.Println(result)
+	//fmt.Println("result", buildPath(dependMap, make([]string, 0), service))
+
 }
