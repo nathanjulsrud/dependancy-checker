@@ -32,10 +32,10 @@ func buildPath(services map[string]string, checked []string, checkAgainst string
 	return checked
 }
 
-func findDependancyLoop(services map[string]string) bool {
+/*func findDependancyLoop(services map[string]string) bool {
 
 	return false
-}
+}*/
 
 func main() {
 	dependMap := map[string]string{
