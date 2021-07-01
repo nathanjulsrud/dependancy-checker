@@ -12,6 +12,7 @@ func buildPath(services map[string]string, checked []string, checkAgainst string
 	} else if services[checkAgainst] == checkAgainst {
 		//if self referencing append item and end process
 		checked = append(checked, services[checkAgainst])
+		checked = append(checked, services[checkAgainst])
 		return checked
 	} else {
 		checked = append(checked, checkAgainst)
@@ -40,7 +41,7 @@ func buildPath(services map[string]string, checked []string, checkAgainst string
 func main() {
 	dependMap := map[string]string{
 		"aa": "c",
-		"b":  "aa",
+		"b":  "",
 		"c":  "b",
 	}
 
