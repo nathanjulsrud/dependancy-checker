@@ -47,14 +47,3 @@ func main() {
 
 	fmt.Println("result", buildPath(dependMap, make([]string, 0), "aa"))
 }
-
-/*check group a
-1	if a references nothing pass
-2	if a references a fail
-	if a references b
-	  check group b
-		1
-		2
-		3 if b references a fail
-		4 if b references c
-*/
