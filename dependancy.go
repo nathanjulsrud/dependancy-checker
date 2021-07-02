@@ -20,16 +20,22 @@ func buildPath(services map[string][]string, checked [][]string, currentThread [
 		fmt.Println("else!")
 		//map level compare
 		for checkNext := range services[checkAgainst] {
-			currentThread = append(currentThread, services[checkAgainst][checkNext])
+			tempThread := append(currentThread, services[checkAgainst][checkNext])
 			//figure out if duplicate item in currentThread
-			if isLoop(currentThread) == true {
-				checked = append(checked, currentThread)
+			if isLoop(tempThread) == true {
+				checked = append(checked, tempThread)
 				return checked
 			}
-			//checked = buildPath(services, checked, currentThread, services[checkAgainst])
+			fmt.Println("next check", services[checkAgainst][checkNext])
+			tempMap := buildPath(services, checked, tempThread, services[checkAgainst][checkNext])
+			fmt.Println("tempmap", tempMap, len(tempMap))
+			if len(tempMap) > 0 {
+				checked = append(checked, tempMap[len(tempMap)-1])
+			}
 		}
+		return checked
 	}
-	return checked
+	//return checked
 }
 
 func contains(stringSlice []string, stringFind string) bool {
@@ -59,12 +65,13 @@ func isLoop(stringSlice []string) bool {
 
 func main() {
 	dependMap := map[string][]string{
-		"a": {"a"},
-		"b": {""},
-		"c": {"b", "a"},
+		"a": {},
+		"b": {"a", "d"},
+		"c": {"b", "a", "d"},
+		"d": {"a"},
 	}
 
-	tempSlice := []string{"a"}
-	fmt.Println("result", buildPath(dependMap, make([][]string, 0), tempSlice, "a"))
+	tempSlice := []string{"c"}
+	fmt.Println("result", buildPath(dependMap, make([][]string, 0), tempSlice, "c"))
 
 }
