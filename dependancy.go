@@ -2,22 +2,20 @@ package main
 
 import (
 	"fmt"
+	"sort"
 )
 
 func buildPath(services map[string][]string, checked [][]string, currentThread []string, checkAgainst string) [][]string {
 	if len(services[checkAgainst]) == 0 {
 		//if nothing more to follow append item and end process
-		fmt.Println("zero")
 		checked = append(checked, currentThread)
 		return checked
 	} else if contains(services[checkAgainst], checkAgainst) == true {
 		//if self referencing append item and end process
 		currentThread = append(currentThread, checkAgainst)
 		checked = append(checked, currentThread)
-		fmt.Println("self reference")
 		return checked
 	} else {
-		fmt.Println("else!")
 		//map level compare
 		for checkNext := range services[checkAgainst] {
 			tempThread := append(currentThread, services[checkAgainst][checkNext])
@@ -26,16 +24,34 @@ func buildPath(services map[string][]string, checked [][]string, currentThread [
 				checked = append(checked, tempThread)
 				return checked
 			}
-			fmt.Println("next check", services[checkAgainst][checkNext])
 			tempMap := buildPath(services, checked, tempThread, services[checkAgainst][checkNext])
-			fmt.Println("tempmap", tempMap, len(tempMap))
 			if len(tempMap) > 0 {
 				checked = append(checked, tempMap[len(tempMap)-1])
 			}
 		}
 		return checked
 	}
-	//return checked
+}
+
+func checkDependancy(dependMap map[string][]string) []string {
+	badServices := make([]string, 0)
+	for key := range dependMap {
+		tempSlice := []string{key}
+		results := buildPath(dependMap, make([][]string, 0), tempSlice, key)
+		if len(results) > 0 {
+			for path := range results {
+				if isLoop(results[path]) == true {
+					for addItems := range results[path] {
+						if contains(badServices, results[path][addItems]) == false {
+							badServices = append(badServices, results[path][addItems])
+						}
+					}
+				}
+			}
+		}
+	}
+	sort.Strings(badServices)
+	return badServices
 }
 
 func contains(stringSlice []string, stringFind string) bool {
@@ -66,13 +82,10 @@ func isLoop(stringSlice []string) bool {
 func main() {
 	dependMap := map[string][]string{
 		"a": {},
-		"b": {"a", "d"},
+		"b": {"a"},
 		"c": {"b", "a", "d"},
 		"d": {"a"},
 	}
-	for key := range dependMap {
-		tempSlice := []string{key}
-		fmt.Println("result", buildPath(dependMap, make([][]string, 0), tempSlice, key))
-	}
-
+	results := checkDependancy(dependMap)
+	fmt.Println(results)
 }
