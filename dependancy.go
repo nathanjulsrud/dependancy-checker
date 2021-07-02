@@ -70,8 +70,9 @@ func main() {
 		"c": {"b", "a", "d"},
 		"d": {"a"},
 	}
-
-	tempSlice := []string{"c"}
-	fmt.Println("result", buildPath(dependMap, make([][]string, 0), tempSlice, "c"))
+	for key := range dependMap {
+		tempSlice := []string{key}
+		fmt.Println("result", buildPath(dependMap, make([][]string, 0), tempSlice, key))
+	}
 
 }
